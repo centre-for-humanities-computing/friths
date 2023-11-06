@@ -1,3 +1,4 @@
 pandas
 pypdf
 scipdf-parser
+datasets
