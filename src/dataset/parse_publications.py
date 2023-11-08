@@ -2,6 +2,7 @@
 """
 
 import os
+import pathlib
 import json
 import scipdf
 from tqdm import tqdm
@@ -26,17 +27,17 @@ def get_file_paths(folder_path: str) -> tuple[list, list]:
 
 if __name__ == "__main__":
 
-    ROOTPATH = "data/raw/"
-    OUTPATH = "data/parsed/publications.json"
+    ROOTPATH = pathlib.Path("data/raw/")
+    OUTPATH = pathlib.Path("data/interim/")
     pdf_paths, other_paths = get_file_paths(ROOTPATH)
     empty_paths = []
 
     # keep track of unparsed paths
-    with open('data/parsed/non_pdf_paths.txt', 'w') as file:
+    with open(OUTPATH.joinpath('non_pdf_paths.txt'), 'w') as file:
         for path in other_paths:
             file.write(path + "\n")
 
-    with open(OUTPATH, "w") as file:
+    with open(OUTPATH.joinpath('publications.json'), "w") as file:
         for path in tqdm(pdf_paths):
             try:
                 parsed = scipdf.parse_pdf_to_dict(path)
@@ -55,6 +56,6 @@ if __name__ == "__main__":
             else:
                 empty_paths.append(path)
 
-        with open('data/parsed/failed_pdf_paths.txt', 'w') as f:
+        with open(OUTPATH.joinpath('failed_pdf_paths.txt'), 'w') as f:
             for path in empty_paths:
                 f.write(path + "\n")
