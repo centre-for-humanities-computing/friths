@@ -37,7 +37,7 @@ if __name__ == "__main__":
         for path in other_paths:
             file.write(path + "\n")
 
-    with open(OUTPATH.joinpath('publications.json'), "w") as file:
+    with open(OUTPATH.joinpath('publications.ndjson'), "w") as file:
         for path in tqdm(pdf_paths):
             try:
                 parsed = scipdf.parse_pdf_to_dict(path)
