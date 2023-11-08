@@ -26,13 +26,19 @@ def get_file_paths(folder_path: str) -> tuple[list, list]:
 
 if __name__ == "__main__":
 
-    ROOTPATH = "data/UTA publications/"
-    OUTPATH = "data/UTA publications/UTA_pubs.json"
+    ROOTPATH = "data/raw/UTA publications/"
+    OUTPATH = "data/parsed/publications.json"
     pdf_paths, other_paths = get_file_paths(ROOTPATH)
+
+    # keep track of unparsed paths
+    with open('data/parsed/unparsed_paths.txt', 'w') as file:
+        for path in other_paths:
+            file.write(path + "\n")
 
     with open(OUTPATH, "w") as file:
         for path in tqdm(pdf_paths):
             parsed = scipdf.parse_pdf_to_dict(path)
+            parsed['path'] = path
             # Use the json.dumps method to serialize the dictionary to a JSON string
             json_string = json.dumps(parsed)
             # Write the JSON string with a newline character to separate objects
