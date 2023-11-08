@@ -25,6 +25,10 @@ def get_file_paths(folder_path: str) -> tuple[list, list]:
     return pdf_paths, other_paths
 
 
+def is_empty(parsed_article: dict) -> bool:
+    return all(value in ("", []) for value in parsed_article.values())
+
+
 if __name__ == "__main__":
 
     ROOTPATH = pathlib.Path("data/raw/")
@@ -41,11 +45,13 @@ if __name__ == "__main__":
         for path in tqdm(pdf_paths):
             try:
                 parsed = scipdf.parse_pdf_to_dict(path)
+                empty = is_empty(parsed)
             except AttributeError:
                 parsed = None
+                empty = True                
 
             # files where something was extracted
-            if parsed:
+            if parsed and not empty:
                 parsed['path'] = path
                 # Use the json.dumps method to serialize the dictionary to a JSON string
                 json_string = json.dumps(parsed)
