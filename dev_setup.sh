@@ -2,6 +2,9 @@
 pip install -r requirements.txt
 python -m spacy download en_core_web_sm
 
+# install the local package
+pip install -e .
+
 # java for runing grobit
 sudo apt update
 sudo apt install openjdk-11-jre-headless -y
