@@ -52,7 +52,6 @@ if __name__ == '__main__':
     INTERIM_PATH = 'data/interim/'
     PROCESSED_PATH = 'data/processed/'
 
-    publications = load_iterim_publications(os.path.join(INTERIM_PATH, 'publications.ndjson'))
+    publications = load_iterim_publications(INTERIM_PATH)
     schema = schema_publications(publications)
-    schema.to_csv(os.path.join(PROCESSED_PATH, 'publications.csv'), index=False
-    
+    schema.to_csv(os.path.join(PROCESSED_PATH, 'publications.csv'), index=False)

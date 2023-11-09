@@ -5,6 +5,7 @@ Second step.
 
 import os
 import re
+from warnings import warn
 import pandas as pd
 import numpy as np
 
@@ -66,7 +67,7 @@ def _extract_publication_year(parsed_metadata: pd.DataFrame) -> list:
         else:
             reconstructed_date.append(row['date'])
         
-        return reconstructed_date
+    return reconstructed_date
 
 
 def reconstruct_publication_year(parsed_metadata: pd.DataFrame, hot_fixes: dict[str, str]) -> pd.DataFrame:
@@ -79,7 +80,7 @@ def reconstruct_publication_year(parsed_metadata: pd.DataFrame, hot_fixes: dict[
         try:
             pd.to_datetime(date)
         except:
-            print(date)
+            warn(date)
 
     parsed_metadata['reconstructed_date'] = reconstructed_date
     # Apply hot fixes (known errors)
@@ -91,7 +92,7 @@ def reconstruct_publication_year(parsed_metadata: pd.DataFrame, hot_fixes: dict[
 if __name__ == "__main__":
 
     OUTDIR = 'data/interim'
-    publications = load_iterim_publications('data/interim/publications.ndjson')
+    publications = load_iterim_publications('data/interim/')
     meta = parse_metadata(publications)
 
     hot_fixes = {
