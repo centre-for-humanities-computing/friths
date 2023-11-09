@@ -1,4 +1,6 @@
 """
+Parses PDF files containing the articles. 
+First step.
 """
 
 import os
