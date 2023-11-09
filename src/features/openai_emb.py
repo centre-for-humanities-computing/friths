@@ -2,25 +2,28 @@
 """
 
 import json
-import openai
+from openai import OpenAI
 import numpy as np
 
 
-def log_in_to_api() -> None:
-    with open('secrets.json', 'r') as f:
+def log_in_to_api(secrets_path: str = 'secrets.json') -> OpenAI:
+    with open(secrets_path, 'r') as f:
         secrets = json.load(f)
 
-    openai.api_key = secrets['OPENAI_API_KEY']
+    return OpenAI(api_key=secrets['OPENAI_API_KEY'])
 
 
-def generate_embeddings(texts: list[str]):
+def generate_embeddings(client: OpenAI, texts: list[str]) -> np.ndarray:
     """
     """
-    embedding_interface = openai.Embedding.create(
+    if isinstance(texts, str):
+        texts = [texts]
+
+    embedding_interface = client.embeddings.create(
         input=texts,
         model="text-embedding-ada-002")
 
-    embeddings = [obj['embedding'] for obj in embedding_interface['data']]
+    embeddings = [emb.embedding for emb in embedding_interface.data]
     embeddings = np.array(embeddings)
 
     return embeddings

@@ -3,3 +3,4 @@ pypdf
 scipdf-parser
 datasets
 tqdm
+openai
