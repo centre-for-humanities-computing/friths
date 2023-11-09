@@ -7,6 +7,8 @@ import json
 import scipdf
 from tqdm import tqdm
 
+from src.dataset.util import IDGenerator
+
 
 def get_file_paths(folder_path: str) -> tuple[list, list]:
     """
@@ -35,6 +37,7 @@ if __name__ == "__main__":
     OUTPATH = pathlib.Path("data/interim/")
     pdf_paths, other_paths = get_file_paths(ROOTPATH)
     empty_paths = []
+    id_generator = IDGenerator()
 
     # keep track of unparsed paths
     with open(OUTPATH.joinpath('non_pdf_paths.txt'), 'w') as file:
@@ -53,6 +56,7 @@ if __name__ == "__main__":
             # files where something was extracted
             if parsed and not empty:
                 parsed['path'] = path
+                parsed['id'] = "p" + str(id_generator.generate_id())
                 # Use the json.dumps method to serialize the dictionary to a JSON string
                 json_string = json.dumps(parsed)
                 # Write the JSON string with a newline character to separate objects
