@@ -4,7 +4,7 @@
 import json
 import warnings
 
-from openai import OpenAI
+from openai import OpenAI, BadRequestError
 import numpy as np
 
 
@@ -30,19 +30,23 @@ def generate_embeddings(client: OpenAI, texts: list[str]) -> np.ndarray:
     return embeddings
 
 
-def get_embeddings_and_warnings(client: OpenAI, text: str, model: str) -> tuple[np.ndarray, str]:
+def get_embeddings_and_warnings(client: OpenAI, text: str, model: str) -> tuple[list[float], str]:
     if text == "":
         warning = "empty"
-        emb = ""
+        emb = []
     else:
         text = text.replace("\n", " ")
 
         with warnings.catch_warnings(record=True) as w:
-            emb_interface = client.embeddings.create(input=[text], model=model)
-            emb = emb_interface.data[0].embedding
+            try:
+                emb_interface = client.embeddings.create(input=[text], model=model)
+                emb = emb_interface.data[0].embedding
+            except BadRequestError as e:
+                emb = []
+                warning = str(e)
 
         if w:
-            warning = w
+            warning = str(w)
         else:
             warning = "ok :)"
 
