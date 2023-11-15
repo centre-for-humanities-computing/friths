@@ -1,4 +1,4 @@
-"""
+"""Generalized functions for interacting with the Opean AI embedding API
 """
 
 import json

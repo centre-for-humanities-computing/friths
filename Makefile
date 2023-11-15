@@ -3,3 +3,4 @@ publications:
 	python src/dataset/metadata_publications.py
 	python src/dataset/prepare_publications.py
 	python src/dataset/quality_checks_publications.py
+	python src/features/run_embeddings.py

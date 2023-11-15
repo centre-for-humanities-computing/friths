@@ -1,27 +1,30 @@
-import json
-from openai import OpenAI
+"""Get features
 
-from src.features.openai_emb import get_embeddings_and_warnings
+Implemented datasets:
+- publications_concat.ndjson
+"""
+
+from tqdm import tqdm
+
+from src.features.openai_emb import get_embeddings_and_warnings, log_in_to_api
 from src.dataset.util import read_jsonl, write_jsonl
 
 
 def main():
-    with open("secrets.json") as f:
-        api_key = json.load(f)
 
-    client = OpenAI(api_key=api_key['OPENAI_API_KEY'])
+    client = log_in_to_api()
     model = "text-embedding-ada-002"
 
     path = "data/interim/publications_concat.ndjson"
 
     texts = read_jsonl(path)
 
-    for text in texts:
+    for text in tqdm(texts):
         embeds, war = get_embeddings_and_warnings(client, text["text"], model=model)
         text["embeddings"] = embeds
         text["warning"] = war
 
-    write_jsonl(texts, "data/processed/publications.ndjson")
+    write_jsonl(texts, "data/processed/publications_concat.ndjson")
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-"""generate Jina embeddingss
+"""Placeholder for general Jina embeddings functions.
 """
 
 import os
