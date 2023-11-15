@@ -5,8 +5,11 @@ python -m spacy download en_core_web_sm
 # install the local package
 pip install -e .
 
-# java for runing grobit
+# tesseract for OCR
 sudo apt update
+sudo apt install tesseract-ocr
+
+# java for runing grobit
 sudo apt install openjdk-11-jre-headless -y
 java -version
 

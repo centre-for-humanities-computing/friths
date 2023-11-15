@@ -57,8 +57,8 @@ def load_publication_paths(interim_path='../data/interim/') -> tuple[list, list,
 
 
 class IDGenerator:
-    def __init__(self):
-        self.counter = 0
+    def __init__(self, starting_position: int = 0):
+        self.counter = starting_position
 
     def generate_id(self):
         self.counter += 1
