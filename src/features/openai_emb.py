@@ -30,7 +30,9 @@ def generate_embeddings(client: OpenAI, texts: list[str]) -> np.ndarray:
     return embeddings
 
 
-def get_embeddings_and_warnings(client: OpenAI, text: str, model: str) -> tuple[list[float], str]:
+def get_embeddings_and_warnings(
+    client: OpenAI, text: str, model: str
+) -> tuple[list[float], str]:
     if text == "":
         warning = "empty"
         emb = []
@@ -47,7 +49,7 @@ def get_embeddings_and_warnings(client: OpenAI, text: str, model: str) -> tuple[
 
         if w:
             warning = str(w)
-        else:
+        elif not warning:
             warning = "ok :)"
 
     return emb, warning
