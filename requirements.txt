@@ -4,3 +4,5 @@ scipdf-parser
 datasets
 tqdm
 openai
+sentence-transformers
+infodynamics @ git+https://github.com/centre-for-humanities-computing/infodynamics.git
