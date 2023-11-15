@@ -33,24 +33,51 @@ def generate_embeddings(client: OpenAI, texts: list[str]) -> np.ndarray:
 def get_embeddings_and_warnings(
     client: OpenAI, text: str, model: str
 ) -> tuple[list[float], str]:
+    """
+    Make openAI embeddings API requests and catch errors/warnings.
+
+    Parameters
+    ----------
+    clinet : OpenAI
+        instantiated openai client (after logging ins)
+
+    text : str
+        single string to process
+    
+    model : str
+        name of open-ai model to use
+
+    Returns
+    -------
+    emb : list[float]
+        list of floats representing the embedding
+    warning : str
+        caught warning or "ok :)" if no warning
+    """
+    
+    # don't attempt with empty text
     if text == "":
         warning = "empty"
         emb = []
+
+    # non empty text
     else:
         text = text.replace("\n", " ")
 
-        with warnings.catch_warnings(record=True) as w:
-            try:
+        # try to get embeddings & catch warnings
+        try:
+            with warnings.catch_warnings(record=True) as w:
                 emb_interface = client.embeddings.create(input=[text], model=model)
                 emb = emb_interface.data[0].embedding
-            except BadRequestError as e:
-                emb = []
-                warning = str(e)
+                if w:
+                    warning = str(w)
+                else:
+                    warning = "ok :)"
 
-        if w:
-            warning = str(w)
-        elif not warning:
-            warning = "ok :)"
+        # if api request fails, catch the error
+        except BadRequestError as e:
+            emb = []
+            warning = str(e)
 
     return emb, warning
 
