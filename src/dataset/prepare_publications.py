@@ -7,11 +7,10 @@ TODO
 """
 
 import os
-import datasets
 import pandas as pd
 import numpy as np
 
-from src.dataset.util import load_iterim_publications, IDGenerator
+from src.dataset.util import load_iterim_publications, IDGenerator, read_jsonl, write_jsonl
 
 
 def schema_publications(parsed_publications: list[dict]) -> pd.DataFrame:
@@ -47,11 +46,62 @@ def schema_publications(parsed_publications: list[dict]) -> pd.DataFrame:
         return df
 
 
+def concat_text(article: dict) -> str:
+    concat_sections = []
+
+    for section in article["sections"]:
+        temp_text = "\n".join((section["heading"], section["text"]))
+
+        concat_sections.append(temp_text)
+
+    text = "\n".join(concat_sections)
+
+    return text
+
+
+def concatenate_publications(parsed_publications: list[dict], verbose: bool = False) -> list[dict]:
+
+    abstracts = []
+    no_abstracts = []
+    full_data = []
+
+    for line in parsed_publications:
+        temp_a = {
+            "id": f"{line['id']}_a",
+            "pub_date": line["pub_date"],
+            "text": line["abstract"],
+        }
+        full_data.append(temp_a)
+        temp_b = {
+            "id": f"{line['id']}_b",
+            "pub_date": line["pub_date"],
+            "text": concat_text(line),
+        }
+        full_data.append(temp_b)
+
+        if line["abstract"] != "":
+            abstracts.append(line["id"])
+
+        else:
+            no_abstracts.append(line["id"])
+
+    if verbose:
+        print(f"Number of files with an abstract: {len(abstracts)}")
+        print(f"Number of files without an abstract: {len(no_abstracts)}")
+        print(f"Total number of files: {len(full_data) / 2}")
+
+    return full_data
+
+
 if __name__ == '__main__':
 
     INTERIM_PATH = 'data/interim/'
     PROCESSED_PATH = 'data/processed/'
 
     publications = load_iterim_publications(INTERIM_PATH)
+    # convert to section-by-section schema & export
     schema = schema_publications(publications)
-    schema.to_csv(os.path.join(PROCESSED_PATH, 'publications.csv'), index=False)
+    schema.to_csv(os.path.join(INTERIM_PATH, 'publications_sections.csv'), index=False)
+    # concatenate texts & export
+    concat = concatenate_publications(publications)
+    write_jsonl(concat, os.path.join(INTERIM_PATH, 'publications_concat.ndjson'))
