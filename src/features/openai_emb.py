@@ -30,7 +30,7 @@ def generate_embeddings(client: OpenAI, texts: list[str]) -> np.ndarray:
     return embeddings
 
 
-def get_embeddings_and_warnings(client: OpenAI, text: str, model: str) -> np.ndarray:
+def get_embeddings_and_warnings(client: OpenAI, text: str, model: str) -> tuple[np.ndarray, str]:
     if text == "":
         warning = "empty"
         emb = ""
@@ -38,16 +38,15 @@ def get_embeddings_and_warnings(client: OpenAI, text: str, model: str) -> np.nda
         text = text.replace("\n", " ")
 
         with warnings.catch_warnings(record=True) as w:
-            emb = client.embeddings.create(input=[text], model=model)["data"][0][
-                "embedding"
-            ]
+            emb_interface = client.embeddings.create(input=[text], model=model)
+            emb = emb_interface.data[0].embedding
 
         if w:
             warning = w
         else:
             warning = "ok :)"
 
-    return emb, w
+    return emb, warning
 
 
 if __name__ == "__main__":
