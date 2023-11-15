@@ -5,6 +5,23 @@ import os
 import json
 
 
+def read_jsonl(path: str) -> list[dict]:
+    """
+    """
+    with open(path, "r") as jsonl_file:
+        object = [json.loads(line.strip()) for line in jsonl_file]
+    return object
+
+
+def write_jsonl(object: list[dict], path: str) -> None:
+    """
+    """
+    with open(path, "w") as jsonl_file:
+        for data_dict in object:
+            # Write each dictionary as a separate line in the jsonl file
+            jsonl_file.write(json.dumps(data_dict) + "\n")
+
+
 def load_iterim_publications(interim_path='../data/interim/') -> list[dict]:
     """
     loads a newline json with extracted info from pdfs
