@@ -126,4 +126,4 @@ if __name__ == "__main__":
     publications_ocr = read_jsonl(os.path.join(OUTDIR, 'publications_ocr.ndjson'))
     meta_ocr = parse_metadata_ocr_files(publications_ocr)
     meta_ocr = reconstruct_publication_year(meta_ocr, hot_fixes={})
-    meta_parsed.to_csv(os.path.join(OUTDIR, 'publications_ocr_meta.csv'), index=False)
+    meta_ocr.to_csv(os.path.join(OUTDIR, 'publications_ocr_meta.csv'), index=False)

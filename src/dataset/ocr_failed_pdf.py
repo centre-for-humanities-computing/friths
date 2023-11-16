@@ -71,6 +71,7 @@ if __name__ == "__main__":
             out = {
                 'id': "p" + str(id_gen.generate_id()),
                 'path': path,
+                'abstract': "",
                 'text': pdf_plain_text,
                 'date': np.nan
             }

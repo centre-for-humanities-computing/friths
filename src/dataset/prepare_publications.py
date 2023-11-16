@@ -16,6 +16,8 @@ from src.dataset.util import IDGenerator, read_jsonl, write_jsonl
 
 def schema_publications(parsed_publications: list[dict]) -> pd.DataFrame:
     """
+    UNUSED
+
     Extracts each section of a publication as a row, assigning IDs.
     IDs are in format p<publication_id>_<section_id>. 
     In case of abstract, the section_id is 'a'. Other sections are numbered.
