@@ -71,9 +71,12 @@ if __name__ == "__main__":
             out = {
                 'id': "p" + str(id_gen.generate_id()),
                 'path': path,
+                'title': "",
+                'authors': "",
                 'abstract': "",
-                'text': pdf_plain_text,
-                'date': np.nan
+                'pub_date': "",
+                'sections': [{'heading': "", 'text': pdf_plain_text}],
+                'doi': ""
             }
             json_string = json.dumps(out)
             file.write(json_string + "\n")

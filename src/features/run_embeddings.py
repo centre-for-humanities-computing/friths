@@ -15,7 +15,7 @@ def main():
     client = log_in_to_api()
     model = "text-embedding-ada-002"
 
-    path = "data/interim/publications_concat.ndjson"
+    path = "data/interim/publications_merged_concat.ndjson"
 
     texts = read_jsonl(path)
 
@@ -24,7 +24,7 @@ def main():
         text["embeddings"] = embeds
         text["warning"] = war
 
-    write_jsonl(texts, "data/processed/publications_concat.ndjson")
+    write_jsonl(texts, "data/processed/publications_merged_concat.ndjson")
 
 
 if __name__ == "__main__":
