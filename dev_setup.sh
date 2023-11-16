@@ -7,7 +7,7 @@ pip install -e .
 
 # tesseract for OCR
 sudo apt update
-sudo apt install tesseract-ocr
+sudo apt install tesseract-ocr -y
 
 # java for runing grobit
 sudo apt install openjdk-11-jre-headless -y
