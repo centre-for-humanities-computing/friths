@@ -15,7 +15,7 @@ from src.dataset.util import load_iterim_publications, IDGenerator
 
 
 def ocr_pdf(pdf_path: str) -> str:
-    """
+    """OCR a PDF file and return the plain text.
     """
     pdf_document = fitz.open(pdf_path)
     full_text = ""
@@ -50,6 +50,8 @@ def load_failed_paths(path: str = "data/interim/failed_pdf_paths.txt") -> list[s
 
 
 def find_top_current_id():
+    """Continue with ID generation from the top ID in the current interim dataset
+    """
     pub = load_iterim_publications(interim_path='data/interim/')
     ids = [int(art['id'][1:]) for art in pub]
     return max(ids)
@@ -74,3 +76,8 @@ if __name__ == "__main__":
             }
             json_string = json.dumps(out)
             file.write(json_string + "\n")
+            
+            # export also an edited pdf
+            # pdf_filename = Path(path).name
+            # pdf_path = OUTPATH.joinpath("ocr_pdfs", pdf_filename)
+            # text_to_pdf(pdf_plain_text, pdf_path)

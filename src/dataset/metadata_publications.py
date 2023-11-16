@@ -9,7 +9,7 @@ from warnings import warn
 import pandas as pd
 import numpy as np
 
-from src.dataset.util import load_iterim_publications
+from src.dataset.util import load_iterim_publications, read_jsonl
 
 
 def parse_metadata(parsed_publications: list[dict]) -> pd.DataFrame:
@@ -22,6 +22,23 @@ def parse_metadata(parsed_publications: list[dict]) -> pd.DataFrame:
         'date': [article['pub_date'] for article in parsed_publications],
         'doi': [article['doi'] for article in parsed_publications],
         'path': [article['path'] for article in parsed_publications],
+        'source': 'parsing'
+    }).replace('', np.nan)
+
+    return df
+
+
+def parse_metadata_ocr_files(ocr_publications: list[dict]) -> pd.DataFrame:
+    """Extracts metata from the OCR files, to follow the same schema as the regular files
+    """
+
+    df = pd.DataFrame({
+        'id': [article['id'] for article in ocr_publications],
+        'title': np.nan,
+        'date': np.nan,
+        'doi': np.nan,
+        'path': [article['path'] for article in ocr_publications],
+        'source': 'ocr',
     }).replace('', np.nan)
 
     return df
@@ -92,13 +109,21 @@ def reconstruct_publication_year(parsed_metadata: pd.DataFrame, hot_fixes: dict[
 if __name__ == "__main__":
 
     OUTDIR = 'data/interim'
-    publications = load_iterim_publications('data/interim/')
-    meta = parse_metadata(publications)
+
+    ### parse good files
+    publications_parsed = load_iterim_publications(OUTDIR)
+    meta_parsed = parse_metadata(publications_parsed)
 
     hot_fixes = {
         "19991651-06-03": "1999",
         "207813": "2005"
         }
     
-    meta = reconstruct_publication_year(meta, hot_fixes)
-    meta.to_csv(os.path.join(OUTDIR, 'publications_meta.csv'), index=False)
+    meta_parsed = reconstruct_publication_year(meta_parsed, hot_fixes=hot_fixes)
+    meta_parsed.to_csv(os.path.join(OUTDIR, 'publications_meta.csv'), index=False)
+    
+    ### parse bad files
+    publications_ocr = read_jsonl(os.path.join(OUTDIR, 'publications_failed.ndjson'))
+    meta_ocr = parse_metadata_ocr_files(publications_ocr)
+    meta_ocr = reconstruct_publication_year(meta_ocr, hot_fixes={})
+    meta_parsed.to_csv(os.path.join(OUTDIR, 'publications_failed_meta.csv'), index=False)

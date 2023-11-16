@@ -2,6 +2,7 @@
 Extracts individual sections to model, assigns IDs and saves them to a file.
 
 TODO
+- merge good and bad files!
 - remove non-english
 - remove duplicates
 """
