@@ -114,7 +114,7 @@ if __name__ == '__main__':
     write_jsonl(publications_merged_concat, os.path.join(INTERIM_PATH, 'publications_merged_concat.ndjson'))
 
     # merge metadata 
-    meta_parsed = pd.read_csv(os.path.join(INTERIM_PATH, 'metadata_parsed.csv'))
-    meta_ocr = pd.read_csv(os.path.join(INTERIM_PATH, 'metadata_ocr.csv'))
+    meta_parsed = pd.read_csv(os.path.join(INTERIM_PATH, 'meta_publications_parsed.csv'))
+    meta_ocr = pd.read_csv(os.path.join(INTERIM_PATH, 'meta_publications_ocr.csv'))
     meta_merged = pd.concat([meta_parsed, meta_ocr], ignore_index=True)
-    meta_merged.to_csv(os.path.join(INTERIM_PATH, 'metadata_merged.csv'), index=False)
+    meta_merged.to_csv(os.path.join(INTERIM_PATH, 'meta_publications_merged.csv'), index=False)

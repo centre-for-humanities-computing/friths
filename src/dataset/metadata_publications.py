@@ -120,10 +120,10 @@ if __name__ == "__main__":
         }
     
     meta_parsed = reconstruct_publication_year(meta_parsed, hot_fixes=hot_fixes)
-    meta_parsed.to_csv(os.path.join(OUTDIR, 'publications_parsed_meta.csv'), index=False)
+    meta_parsed.to_csv(os.path.join(OUTDIR, 'meta_publications_parsed.csv'), index=False)
     
     ### parse bad files
     publications_ocr = read_jsonl(os.path.join(OUTDIR, 'publications_ocr.ndjson'))
     meta_ocr = parse_metadata_ocr_files(publications_ocr)
     meta_ocr = reconstruct_publication_year(meta_ocr, hot_fixes={})
-    meta_ocr.to_csv(os.path.join(OUTDIR, 'publications_ocr_meta.csv'), index=False)
+    meta_ocr.to_csv(os.path.join(OUTDIR, 'meta_publications_ocr.csv'), index=False)
