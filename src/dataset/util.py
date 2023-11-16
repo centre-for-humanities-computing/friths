@@ -22,27 +22,13 @@ def write_jsonl(object: list[dict], path: str) -> None:
             jsonl_file.write(json.dumps(data_dict) + "\n")
 
 
-def load_iterim_publications(interim_path='../data/interim/') -> list[dict]:
-    """
-    loads a newline json with extracted info from pdfs
-    """
-    path = os.path.join(interim_path, 'publications.ndjson')
-    pub = []
-    with open(path) as fin:
-        for line in fin:
-            json_obj = json.loads(line)
-            pub.append(json_obj)
-
-    return pub
-
-
 def load_publication_paths(interim_path='../data/interim/') -> tuple[list, list, list]:
     """
     loads three sets of paths
     """
 
     # successfully extracted paths
-    pub = load_iterim_publications(interim_path=interim_path)
+    pub = read_jsonl(os.path.join(interim_path, 'publications_parsed.ndjson'))
     parsed_paths = [art['path'] for art in pub]
 
     # failed paths

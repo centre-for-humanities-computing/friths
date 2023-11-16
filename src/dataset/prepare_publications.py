@@ -11,7 +11,7 @@ import os
 import pandas as pd
 import numpy as np
 
-from src.dataset.util import load_iterim_publications, IDGenerator, read_jsonl, write_jsonl
+from src.dataset.util import IDGenerator, read_jsonl, write_jsonl
 
 
 def schema_publications(parsed_publications: list[dict]) -> pd.DataFrame:
@@ -99,10 +99,10 @@ if __name__ == '__main__':
     INTERIM_PATH = 'data/interim/'
     PROCESSED_PATH = 'data/processed/'
 
-    publications = load_iterim_publications(INTERIM_PATH)
+    publications_parsed = read_jsonl(os.path.join(INTERIM_PATH, 'publications_parsed.ndjson'))
     # convert to section-by-section schema & export
-    schema = schema_publications(publications)
-    schema.to_csv(os.path.join(INTERIM_PATH, 'publications_sections.csv'), index=False)
+    schema = schema_publications(publications_parsed)
+    schema.to_csv(os.path.join(INTERIM_PATH, 'publications_parsed_sections.csv'), index=False)
     # concatenate texts & export
-    concat = concatenate_publications(publications)
-    write_jsonl(concat, os.path.join(INTERIM_PATH, 'publications_concat.ndjson'))
+    concat = concatenate_publications(publications_parsed)
+    write_jsonl(concat, os.path.join(INTERIM_PATH, 'publications_parsed_concat.ndjson'))

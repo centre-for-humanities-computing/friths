@@ -11,7 +11,7 @@ import pytesseract
 from PIL import Image
 import fitz  # PyMuPDF
 
-from src.dataset.util import load_iterim_publications, IDGenerator
+from src.dataset.util import read_jsonl, IDGenerator
 
 
 def ocr_pdf(pdf_path: str) -> str:
@@ -52,7 +52,7 @@ def load_failed_paths(path: str = "data/interim/failed_pdf_paths.txt") -> list[s
 def find_top_current_id():
     """Continue with ID generation from the top ID in the current interim dataset
     """
-    pub = load_iterim_publications(interim_path='data/interim/')
+    pub = read_jsonl('data/interim/publications_parsed.ndjson')
     ids = [int(art['id'][1:]) for art in pub]
     return max(ids)
 
@@ -65,7 +65,7 @@ if __name__ == "__main__":
 
     OUTPATH = Path("data/interim/")
 
-    with open(OUTPATH.joinpath('publications_failed.ndjson'), "w") as file:
+    with open(OUTPATH.joinpath('publications_ocr.ndjson'), "w") as file:
         for path in tqdm(failed_paths):
             pdf_plain_text = ocr_pdf(path)
             out = {
