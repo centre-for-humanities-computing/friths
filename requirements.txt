@@ -4,7 +4,7 @@ scipdf-parser
 datasets
 tqdm
 openai
-sentence-transformers
+# sentence-transformers
 infodynamics @ git+https://github.com/centre-for-humanities-computing/infodynamics.git
 PyMuPDF
 pytesseract
