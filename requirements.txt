@@ -9,3 +9,4 @@ infodynamics @ git+https://github.com/centre-for-humanities-computing/infodynami
 PyMuPDF
 pytesseract
 textdescriptives
+langdetect
