@@ -5,8 +5,9 @@ Implemented datasets:
 """
 
 from tqdm import tqdm
+import tiktoken
 
-from src.features.openai_emb import get_embeddings_and_warnings, log_in_to_api
+from src.features.openai_emb import get_embeddings_and_warnings, log_in_to_api, get_trunc_text
 from src.dataset.util import read_jsonl, write_jsonl
 
 
@@ -19,8 +20,11 @@ def main():
 
     texts = read_jsonl(path)
 
+    encoding = tiktoken.encoding_for_model(model)
+
     for text in tqdm(texts):
-        embeds, war = get_embeddings_and_warnings(client, text["text"], model=model)
+        trunc_text = get_trunc_text(text['text'], encoding)
+        embeds, war = get_embeddings_and_warnings(client, trunc_text, model=model)
         text["embeddings"] = embeds
         text["warning"] = war
 

@@ -10,3 +10,4 @@ PyMuPDF
 pytesseract
 textdescriptives
 langdetect
+tiktoken
