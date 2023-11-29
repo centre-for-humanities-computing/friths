@@ -33,7 +33,7 @@ def get_textdescriptives(df: pd.DataFrame) -> pd.DataFrame:
         lang="en",
     )
 
-    metrics_df = df[['pub_id','text']].join(metrics, rsuffix='met_')
+    metrics_df = df[['pub_id']].join(metrics, rsuffix='met_')
     return metrics_df
 
 def lang_detector(text):
@@ -50,14 +50,14 @@ def main():
     DATA_PROCESSED = pathlib.Path('data/processed')
 
     meta = pd.read_csv(DATA_INTERIM.joinpath('meta_publications_merged.csv'))
-    print(meta.columns)
+    meta = meta.rename(columns = {'id':'pub_id'})
 
     texts = pd.DataFrame(read_jsonl(DATA_PROCESSED.joinpath('publications_merged_concat.ndjson')))
     texts['pub_id'] = texts['id'].str.split('_').str[0]
 
     subset = texts.loc[texts['text'] != ""]
 
-    texts['lang'] = texts['text'].apply(lang_detector)
+    subset['lang'] = subset['text'].apply(lang_detector)
 
 
     for id in subset['pub_id'].unique():
@@ -68,20 +68,19 @@ def main():
         if len(id_df) > 1:
             # check if they mismatch
             if len(id_df['lang'].unique()) > 1:
-                meta.loc[meta['id'] == id, 'lang'] = 'mismatch'
+                meta.loc[meta['pub_id'] == id, 'lang'] = 'mismatch'
             # otherwise set the unique value
             else:
-                meta.loc[meta['id'] == id, 'lang'] = id_df['lang'].unique()[0]
+                meta.loc[meta['pub_id'] == id, 'lang'] = id_df['lang'].unique()[0]
         # if there is only a body, just return the lang of that
         else:
-            meta.loc[meta['id'] == id, 'lang'] = id_df['lang'].unique()[0]
+            meta.loc[meta['pub_id'] == id, 'lang'] = id_df['lang'].unique()[0]
 
+    metrics = get_textdescriptives(texts)
 
-    print(meta['lang'])
-    # metrics = get_textdescriptives(texts)
-    # print(metrics.head())
+    meta = meta.merge(metrics, on = 'pub_id')
 
-    # texts = lang_flag(texts)
+    meta.to_csv(DATA_PROCESSED.joinpath('meta_publications_quality.csv'))
 
 if __name__ == '__main__':
     main()
