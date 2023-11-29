@@ -8,3 +8,6 @@ openai
 infodynamics @ git+https://github.com/centre-for-humanities-computing/infodynamics.git
 PyMuPDF
 pytesseract
+textdescriptives
+langdetect
+tiktoken

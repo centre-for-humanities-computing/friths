@@ -15,6 +15,18 @@ def log_in_to_api(secrets_path: str = "secrets.json") -> OpenAI:
     return OpenAI(api_key=secrets["OPENAI_API_KEY"])
 
 
+def get_trunc_text(text, encoding):
+    """
+    takes a text, counts the number of tokens according to the encoder, truncates the text if it goes beyond 8191, and then returns the text decoded.
+    """
+    tokens = encoding.encode(text)
+    if len(tokens) > 8190:
+        trunc = tokens[:8191]
+        return encoding.decode(trunc)
+    else:
+        return encoding.decode(tokens)
+
+
 def generate_embeddings(client: OpenAI, texts: list[str]) -> np.ndarray:
     """ """
     if isinstance(texts, str):
