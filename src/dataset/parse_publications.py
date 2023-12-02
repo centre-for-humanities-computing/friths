@@ -35,7 +35,7 @@ def is_empty(parsed_article: dict) -> bool:
 
 if __name__ == "__main__":
 
-    ROOTPATH = pathlib.Path("data/raw/")
+    ROOTPATH = pathlib.Path("data/raw/publications_manual_export/UTA publications")
     OUTPATH = pathlib.Path("data/interim/")
     pdf_paths, other_paths = get_file_paths(ROOTPATH)
     empty_paths = []
