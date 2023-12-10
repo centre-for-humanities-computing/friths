@@ -25,17 +25,18 @@ B) `dataset/ocr_failed_pdf.py`
 Runs OCR using `pytesseract`.
 Outputs are saved separately from the parsed files.
 
-C) `dataset/metadata_publications.py`
+C1) `dataset/metadata_publications.py`
 Generates metadata & document ids separately for both file types (PARSING and OCR).
 Most importatly, tries to reconstruct the publication year.
 Otherwise, just takes the metadata found by `scipdf` (PARSING files only), or adds blank columns (OCR files only)/
 
-*C2 interim) `notebooks/meta_merging.py`
-Merges internal metadata with records extracted from ResearchRabbit (`data/raw/ResearchRabbit_Export_{ID}.csv`)
-Should be turned into a real script & added towards the end of the pipeline!
+C2) `dataset/metadata_researchrabbit.py`
+Merges PARSING metadata with records extracted from ResearchRabbit (`data/raw/ResearchRabbit_Export_{ID}.csv`)
+Overwrites `meta_publications_parsed.csv`
 
 D) `dataset/concat_publications.py`
 Merges PARSING and OCR files to embed them.
+Also merges metadata files.
 
 E) `dataset/quality_checks_publications.py`
 Adds info about language & text descriptive stats into the metadata.
