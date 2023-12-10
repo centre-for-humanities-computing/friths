@@ -27,8 +27,8 @@ def augument_on_title_lookup(df_parsing: pd.DataFrame, df_rr: pd.DataFrame, verb
         subset of df_parsing, augumented with title lookup
     """
     # standardize to lowercase
-    df_parsing['title_in_rr'] = df_parsing['title'].str.lower()
-    df_rr['title_in_prs'] = df_rr['title'].str.lower()
+    df_parsing['title_in_prs'] = df_parsing['title'].str.lower()
+    df_rr['title_in_rr'] = df_rr['title'].str.lower()
 
     # get articles WITHOUT doi & WITH title
     df_parsing_no_doi = df_parsing[df_parsing['doi'].isna()]
