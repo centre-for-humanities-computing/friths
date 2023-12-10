@@ -77,6 +77,7 @@ def main():
             meta.loc[meta['pub_id'] == id, 'lang'] = id_df['lang'].unique()[0]
 
     metrics = get_textdescriptives(texts)
+    metrics = metrics.drop(columns=['text'])
 
     meta = meta.merge(metrics, on = 'pub_id')
 
