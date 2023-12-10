@@ -201,7 +201,7 @@ def merge_augumented_datasets(df_parsing: pd.DataFrame, m_augumented_title: pd.D
         .drop(columns=['date', 'reconstructed_date'])
     )
 
-    return df_parsing
+    return df_parsing_
 
 
 if __name__ == "__main__":
@@ -230,6 +230,6 @@ if __name__ == "__main__":
 
     # export final df
     df_parsed_augumented.to_csv(
-        os.path.join(INTERIM_PATH, "meta_publications_parsed.csv"),
+        os.path.join(INTERIM_PATH, "meta_publications_parsed_augumented.csv"),
         index=False
         )
