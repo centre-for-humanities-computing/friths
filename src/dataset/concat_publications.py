@@ -121,3 +121,7 @@ if __name__ == '__main__':
     meta_ocr = pd.read_csv(os.path.join(INTERIM_PATH, 'meta_publications_ocr.csv'))
     meta_merged = pd.concat([meta_parsed, meta_ocr], ignore_index=True)
     meta_merged.to_csv(os.path.join(INTERIM_PATH, 'meta_publications_merged.csv'), index=False)
+
+    # merge abstracts
+    abstracts_merged = parsed_abs + ocr_abs
+    write_jsonl(abstracts_merged, os.path.join(INTERIM_PATH, 'abstracts_merged.ndjson'))

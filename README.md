@@ -37,9 +37,11 @@ Merges PARSING metadata with records extracted from Scopus (`data/raw/ScopusExpo
 
 D) `dataset/concat_publications.py`
 Concatenates article sections into a single block of text.
+Creates files with the extracted abstracts.
 Merges:
     - PARSING and OCR files.
     - PARSING and OCR metadata files.
+    - PARSING and OCR abstract files.
 
 E) `dataset/quality_checks_publications.py`
 Adds info about language & text descriptive stats into the metadata.
