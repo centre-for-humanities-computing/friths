@@ -1,7 +1,7 @@
 """Extract Scopus data
 """
 
-import datetime
+import os
 import pandas as pd
 from pybliometrics.scopus import ScopusSearch
 
@@ -29,16 +29,17 @@ def fetch_author_abstracts():
 
 
 if __name__ == "__main__":
+
     id_uta = 56046313500
     id_chris = 36051252900
 
-    df_uta = fetch_author_metadata(id_uta)
-    df_chris = fetch_author_metadata(id_chris)
+    path_uta = f"data/raw/ScopusExport_{id_uta}.csv"
+    path_chris = f"data/raw/ScopusExport_{id_chris}.csv"
 
-    current_date = datetime.date.today()
-    yy_mm_dd_tag = current_date.strftime("%y%m%d")
+    if not os.path.exists(path_uta):
+        df_uta = fetch_author_metadata(id_uta)
+        df_uta.to_csv(f"data/raw/ScopusExport_{id_uta}.csv", index=False)
 
-    df_uta.to_csv(f"../data/raw/ScopusExport_{id_uta}_{yy_mm_dd_tag}.csv", index=False)
-    df_chris.to_csv(
-        f"../data/raw/ScopusExport_{id_uta}_{yy_mm_dd_tag}.csv", index=False
-    )
+    if not os.path.exists(path_chris):
+        df_chris = fetch_author_metadata(id_chris)
+        df_chris.to_csv(f"data/raw/ScopusExport_{id_chris}.csv", index=False)

@@ -251,7 +251,7 @@ if __name__ == "__main__":
     args = ap.parse_args()
 
     # TODO make legit
-    args.scopus_file = "ScopusExport_56046313500_240123.csv"
+    args.scopus_file = "ScopusExport_56046313500.csv"
 
     RAW_PATH = os.path.join("data", "raw")
     INTERIM_PATH = os.path.join("data", "interim")
