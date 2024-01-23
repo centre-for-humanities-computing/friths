@@ -55,7 +55,7 @@ def get_embeddings_and_warnings(
 
     text : str
         single string to process
-    
+
     model : str
         name of open-ai model to use
 
@@ -66,7 +66,7 @@ def get_embeddings_and_warnings(
     warning : str
         caught warning or "ok :)" if no warning
     """
-    
+
     # don't attempt with empty text
     if text == "":
         warning = "empty"
