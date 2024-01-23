@@ -62,7 +62,7 @@ def augument_on_title_lookup(
                 "title_in_prs": row["title_in_prs"],
                 "title_in_sc": selected_title,
                 "matches": close_match,
-                "id": row["id"],
+                "pub_id": row["pub_id"],
                 "n_matches": n_matches,
             }
         )
@@ -78,7 +78,7 @@ def augument_on_title_lookup(
     m_augumented_title = pd.merge(
         df_parsing_no_doi_yes_tit.drop(columns=["doi"]),
         useful_found_pairs.drop(columns=["title_in_prs"]),
-        on="id",
+        on="pub_id",
         how="left",
     )
 
@@ -179,7 +179,7 @@ def merge_augumented_datasets(
     if verbose:
         print("\n\nDuplicated IDs")
         duplicatesd_ids = m_parsing_aug_complete[
-            m_parsing_aug_complete["id"].duplicated()
+            m_parsing_aug_complete["pub_id"].duplicated()
         ]
         if len(duplicatesd_ids) > 0:
             print(duplicatesd_ids)
@@ -188,17 +188,17 @@ def merge_augumented_datasets(
         else:
             print("\nNO DUPLICATES FOUND")
 
-    m_parsing_aug_complete = m_parsing_aug_complete.drop_duplicates(subset="id")
-    assert m_parsing_aug_complete["id"].nunique() == len(m_parsing_aug_complete)
+    m_parsing_aug_complete = m_parsing_aug_complete.drop_duplicates(subset="pub_id")
+    assert m_parsing_aug_complete["pub_id"].nunique() == len(m_parsing_aug_complete)
 
     # find document ids that were not possible to augument
-    non_overlap = set(df_parsing["id"].tolist()) - set(
-        m_parsing_aug_complete["id"].tolist()
+    non_overlap = set(df_parsing["pub_id"].tolist()) - set(
+        m_parsing_aug_complete["pub_id"].tolist()
     )
     assert len(df_parsing) - len(m_parsing_aug_complete) == len(non_overlap)
 
     # subset of documents that were not augumented
-    m_parsing_missing = df_parsing[df_parsing["id"].isin(non_overlap)]
+    m_parsing_missing = df_parsing[df_parsing["pub_id"].isin(non_overlap)]
     m_parsing_missing = m_parsing_missing.drop(
         columns=["title", "doi", "title_in_prs"]
     ).rename(  # they are empty

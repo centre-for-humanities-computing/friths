@@ -7,8 +7,7 @@ from pybliometrics.scopus import ScopusSearch
 
 
 def fetch_author_metadata(author_id: int) -> pd.DataFrame:
-    """
-    """
+    """ """
     search_author = ScopusSearch(query=f"AU-ID({author_id})", download=True)
 
     df = pd.DataFrame(search_author.results)
@@ -22,14 +21,12 @@ def fetch_author_metadata(author_id: int) -> pd.DataFrame:
 
 
 def fetch_author_abstracts():
-    """
-    """
+    """ """
     # TODO
     pass
 
 
 if __name__ == "__main__":
-
     id_uta = 56046313500
     id_chris = 36051252900
 
