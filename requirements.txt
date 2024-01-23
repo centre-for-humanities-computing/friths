@@ -12,3 +12,4 @@ umap-learn
 textdescriptives
 langdetect
 tiktoken
+pybliometrics
