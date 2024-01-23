@@ -14,7 +14,6 @@ Input: publication PDFs (`data/raw/UTA publications`)
 Manual work required to keep most data:
 - Export scanned files (`failed_pdf_paths.txt`) with "Embed text" (Sofie)
 - Manually convert or fix non-pdf files (`non_pdf_paths.txt`)
-- Get extra metadata for Uta Frith from [ResearchRabbit](https://www.researchrabbitapp.com/) (find author on ResearchRabbit, select all "Published Work" -> "Export Papers")
 
 Pipeline:
 A) `dataset/parse_publications.py`
@@ -30,13 +29,19 @@ Generates metadata & document ids separately for both file types (PARSING and OC
 Most importatly, tries to reconstruct the publication year.
 Otherwise, just takes the metadata found by `scipdf` (PARSING files only), or adds blank columns (OCR files only)/
 
-C2) `dataset/metadata_researchrabbit.py`
-Merges PARSING metadata with records extracted from ResearchRabbit (`data/raw/ResearchRabbit_Export_{ID}.csv`)
-Overwrites `meta_publications_parsed.csv`
+C2) `dataset/fetch_scopus.py`
+Fetches metadata from the Scopus API, given author IDs.
+
+C3) `dataset/metadata_scopus.py`
+Merges PARSING metadata with records extracted from Scopus (`data/raw/ScopusExport_{author_id}_{date}.csv`)
 
 D) `dataset/concat_publications.py`
-Merges PARSING and OCR files to embed them.
-Also merges metadata files.
+Concatenates article sections into a single block of text.
+Creates files with the extracted abstracts.
+Merges:
+    - PARSING and OCR files.
+    - PARSING and OCR metadata files.
+    - PARSING and OCR abstract files.
 
 E) `dataset/quality_checks_publications.py`
 Adds info about language & text descriptive stats into the metadata.
