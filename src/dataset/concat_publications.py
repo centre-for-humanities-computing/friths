@@ -1,9 +1,7 @@
 """
-Extracts individual sections to model, assigns IDs and saves them to a file.
-
-TODO
-- merge good and bad files!
-
+Concatenates article sections into a single block of text.
+Extracts abstracts.
+Merges all the files.
 """
 
 import os
@@ -61,56 +59,61 @@ def concat_text(article: dict) -> str:
     return text
 
 
-def concatenate_publications(parsed_publications: list[dict], verbose: bool = False) -> list[dict]:
+def concatenate_publications(parsed_publications: list[dict]) -> tuple[list[dict], list[dict]]:
 
     abstracts = []
-    no_abstracts = []
-    full_data = []
+    publications = []
 
     for line in parsed_publications:
-        temp_a = {
-            "id": f"{line['id']}_a",
-            "pub_date": line["pub_date"],
-            "text": line["abstract"],
+
+        publication_body = concat_text(line)
+
+        if line['abstract'] != "":
+            publication_body = line["abstract"] + "\n" + publication_body
+
+        temp_publication = {
+            "id": line["id"],
+            "text": publication_body
         }
-        full_data.append(temp_a)
-        temp_b = {
-            "id": f"{line['id']}_b",
-            "pub_date": line["pub_date"],
-            "text": concat_text(line),
+
+        temp_abstract = {
+            "id": line["id"],
+            "abstract": line["abstract"] 
         }
-        full_data.append(temp_b)
 
-        if line["abstract"] != "":
-            abstracts.append(line["id"])
+        abstracts.append(temp_abstract)
+        publications.append(temp_publication)
 
-        else:
-            no_abstracts.append(line["id"])
-
-    if verbose:
-        print(f"Number of files with an abstract: {len(abstracts)}")
-        print(f"Number of files without an abstract: {len(no_abstracts)}")
-        print(f"Total number of files: {len(full_data) / 2}")
-
-    return full_data
+    return abstracts, publications
 
 
 if __name__ == '__main__':
 
     INTERIM_PATH = 'data/interim/'
 
+
+    ###
+    ### CONCATENATION
+    ###
+
     # good files
     publications_parsed = read_jsonl(os.path.join(INTERIM_PATH, 'publications_parsed.ndjson'))
-    publications_parsed_concat = concatenate_publications(publications_parsed)
-    write_jsonl(publications_parsed_concat, os.path.join(INTERIM_PATH, 'publications_parsed_concat.ndjson'))
+    parsed_abs, parsed_pub = concatenate_publications(publications_parsed)
+    write_jsonl(parsed_abs, os.path.join(INTERIM_PATH, 'abstracts_parsed.ndjson'))
+    write_jsonl(parsed_pub, os.path.join(INTERIM_PATH, 'publications_parsed_concat.ndjson'))
 
     # bad files
     publications_ocr = read_jsonl(os.path.join(INTERIM_PATH, 'publications_ocr.ndjson'))
-    publications_ocr_concat = concatenate_publications(publications_ocr)
-    write_jsonl(publications_ocr_concat, os.path.join(INTERIM_PATH, 'publications_ocr_concat.ndjson'))
+    ocr_abs, ocr_pub = concatenate_publications(publications_ocr)
+    write_jsonl(ocr_abs, os.path.join(INTERIM_PATH, 'abstracts_ocr.ndjson'))
+    write_jsonl(ocr_pub, os.path.join(INTERIM_PATH, 'publications_ocr_concat.ndjson'))
+
+    ###
+    ### MERGING
+    ### 
 
     # merge files
-    publications_merged_concat = publications_parsed_concat + publications_ocr_concat
+    publications_merged_concat = parsed_pub + ocr_pub
     write_jsonl(publications_merged_concat, os.path.join(INTERIM_PATH, 'publications_merged_concat.ndjson'))
 
     # merge metadata 
