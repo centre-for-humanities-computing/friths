@@ -250,6 +250,7 @@ if __name__ == "__main__":
     ap.add_argument("--scopus_file")
     args = ap.parse_args()
 
+    # TODO make legit
     args.scopus_file = "ScopusExport_56046313500_240123.csv"
 
     RAW_PATH = os.path.join("data", "raw")
