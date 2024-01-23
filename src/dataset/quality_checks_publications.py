@@ -57,7 +57,7 @@ def main():
     meta = meta.rename(columns={"pub_id": "pub_id"})
 
     texts = pd.DataFrame(
-        read_jsonl(DATA_PROCESSED.joinpath("publications_merged_concat.ndjson"))
+        read_jsonl(DATA_INTERIM.joinpath("publications_merged_concat.ndjson"))
     )
     texts["pub_id"] = texts["pub_id"].str.split("_").str[0]
 
