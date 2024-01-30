@@ -5,6 +5,7 @@ To get a .txt file of the results you can pipe the result to that file:
     python3 src/time_period_topics.py > "topics.txt"
 """
 import datetime
+from string import digits
 from typing import Iterable
 
 import numpy as np
@@ -54,6 +55,10 @@ def label_dates(
     return labels
 
 
+def remove_digits(text: str) -> str:
+    return text.translate({ord(k): None for k in digits})
+
+
 boundaries = [
     (1983, 10),
     (1991, 10),
@@ -71,6 +76,7 @@ data = abstracts.merge(all_papers, on="eid", how="inner")
 data = data.dropna(subset=["abstract", "coverDate"])
 data["date"] = pd.to_datetime(data["coverDate"], format="%Y-%m-%d")
 data["segment"] = label_dates(data["date"], boundaries)
+data["abstract"] = data["abstract"].map(remove_digits)
 
 document_topic_matrix = label_binarize(
     data["segment"], classes=np.sort(np.unique(data["segment"]))
