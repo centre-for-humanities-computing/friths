@@ -42,10 +42,11 @@ def get_topics(
 
 
 def label_dates(
-    dates: Iterable[datetime.date], boundaries: list[datetime.date]
+    dates: Iterable[pd.Timestamp], boundaries: list[datetime.date]
 ) -> list[int]:
     labels = []
-    for date in dates:
+    for ts in dates:
+        date = ts.date()
         i_segment = 0
         while (i_segment < len(boundaries)) and (boundaries[i_segment] < date):
             i_segment += 1
@@ -56,24 +57,18 @@ def label_dates(
 boundaries = [(1980, 8), (1998, 3), (2001, 4), (2002, 5)]
 boundaries = [datetime.date(year, month, 1) for year, month in boundaries]
 
-texts = pd.read_json(
-    "data/processed/publications_merged_concat.ndjson", lines=True, orient="records"
-)
-meta = pd.read_csv("data/processed/meta_publications_months.csv", sep=";")
-data = texts.merge(meta, on="pub_id", how="inner")
-data = data.dropna(subset=["year", "month"])
-data["year"] = data["year"].astype(int)
-data["month"] = data["month"].astype(int)
-data["date"] = [
-    datetime.date(year, month, 1) for year, month in zip(data["year"], data["month"])
-]
+abstracts = pd.read_csv("abstracts.csv")
+all_papers = pd.concat([pd.read_csv("raw/uta.csv"), pd.read_csv("raw/chris.csv")])
+data = abstracts.merge(all_papers, on="eid", how="inner")
+data = data.dropna(subset=["abstract", "coverDate"])
+data["date"] = pd.to_datetime(data["coverDate"], format="%Y-%m-%d")
 data["segment"] = label_dates(data["date"], boundaries)
 
 document_topic_matrix = label_binarize(
     data["segment"], classes=np.sort(np.unique(data["segment"]))
 )
 vectorizer = CountVectorizer(stop_words="english", min_df=10)
-doc_term_matrix = vectorizer.fit_transform(data["text"])
+doc_term_matrix = vectorizer.fit_transform(data["abstract"])
 vocab = vectorizer.get_feature_names_out()
 
 components = soft_ctf_idf(document_topic_matrix, doc_term_matrix)  # type: ignore
