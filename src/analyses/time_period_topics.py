@@ -53,7 +53,7 @@ def label_dates(
     return labels
 
 
-boundaries = [(1969, 1), (1983, 10), (1991, 10), (1999, 5), (2002, 6), (2005, 10), (2009, 6), (2012, 8)]
+boundaries = [(1983, 10), (1991, 10), (1999, 5), (2002, 6), (2005, 10), (2009, 6), (2012, 8)]
 boundaries = [datetime.date(year, month, 1) for year, month in boundaries]
 
 texts = pd.read_json(
