@@ -70,23 +70,29 @@ boundaries = [
 ]
 boundaries = [datetime.date(year, month, 1) for year, month in boundaries]
 
-abstracts = pd.read_csv("abstracts.csv")
-all_papers = pd.concat([pd.read_csv("raw/uta.csv"), pd.read_csv("raw/chris.csv")])
-data = abstracts.merge(all_papers, on="eid", how="inner")
-data = data.dropna(subset=["abstract", "coverDate"])
-data["date"] = pd.to_datetime(data["coverDate"], format="%Y-%m-%d")
-data["segment"] = label_dates(data["date"], boundaries)
-data["abstract"] = data["abstract"].map(remove_digits)
 
-document_topic_matrix = label_binarize(
-    data["segment"], classes=np.sort(np.unique(data["segment"]))
-)
-vectorizer = CountVectorizer(stop_words="english", min_df=10)
-doc_term_matrix = vectorizer.fit_transform(data["abstract"])
-vocab = vectorizer.get_feature_names_out()
+def main():
+    abstracts = pd.read_csv("abstracts.csv")
+    all_papers = pd.concat([pd.read_csv("raw/uta.csv"), pd.read_csv("raw/chris.csv")])
+    data = abstracts.merge(all_papers, on="eid", how="inner")
+    data = data.dropna(subset=["abstract", "coverDate"])
+    data["date"] = pd.to_datetime(data["coverDate"], format="%Y-%m-%d")
+    data["segment"] = label_dates(data["date"], boundaries)
+    data["abstract"] = data["abstract"].map(remove_digits)
 
-components = soft_ctf_idf(document_topic_matrix, doc_term_matrix)  # type: ignore
-topics = get_topics(components, vocab)
+    document_topic_matrix = label_binarize(
+        data["segment"], classes=np.sort(np.unique(data["segment"]))
+    )
+    vectorizer = CountVectorizer(stop_words="english", min_df=10)
+    doc_term_matrix = vectorizer.fit_transform(data["abstract"])
+    vocab = vectorizer.get_feature_names_out()
 
-for topic in topics:
-    print(", ".join(topic))
+    components = soft_ctf_idf(document_topic_matrix, doc_term_matrix)  # type: ignore
+    topics = get_topics(components, vocab)
+
+    for topic in topics:
+        print(", ".join(topic))
+
+
+if __name__ == "__main__":
+    main()
