@@ -55,10 +55,9 @@ def label_dates(
         labels.append(i_segment)
     return labels
 
-
+  
 def remove_digits(text: str) -> str:
     return text.translate({ord(k): None for k in digits})
-
 
 boundaries = [
     (1983, 10),
